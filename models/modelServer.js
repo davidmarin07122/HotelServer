@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 
 const { conectarBD } = require('../database/conexion.js')
 
@@ -32,6 +33,7 @@ despertarBD(){
 
 llamarAuxiliares(){
     this.app.use(express.json())
+    this.app.use(cors())
 }
 
 }
