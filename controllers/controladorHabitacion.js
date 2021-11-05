@@ -1,48 +1,118 @@
+const e = require('express');
 const {request, response } = require('express');
 
-function registrarHabitacion(peticion = request, respuesta = response) {
-    
-    //datos a recibir
-    let datosPeticion = peticion.body;
+const{ insertarHabitacion } = require ('../services/serviceHabitacion.js')
+const{ leerHabitacion } = require ('../services/serviceHabitacion.js')
+const{ leerHabitaciones } = require ('../services/serviceHabitacion.js')
+const{ borrarHabitacion } = require ('../services/serviceHabitacion.js')
+const{ modificarHabitacion } = require ('../services/serviceHabitacion.js')
 
-    respuesta.json({
-        mensaje:"Habitacion registrada..",
-        datos:datosPeticion
-    })
+async function registrarHabitacion(peticion = request, respuesta = response) {
+    
+    try {
+        
+        let datosPeticion = peticion.body;
+
+        await insertarHabitacion(datosPeticion)
+        respuesta.status(200).json({
+            estado: true,
+            mensaje: "Exito registrando la havitacion"
+        })
+    } catch (error) {
+        respuesta.status(400).json({
+            estado: false, 
+            mensaje: "Error..." + error
+        })
+    }
     
 }
 
-function consultarHabitaciones(peticion=request, respuesta=response) {
-    respuesta.json({
-        mensaje:"buscado todo los juagdores..."
-    })
+async function consultarHabitaciones(peticion=request, respuesta=response) {
+    
+    try {
+        
+        let havitaciones = await leerHabitaciones()
+
+        respuesta.status(200).json({
+            estado: true,
+            mensaje: havitaciones
+        })
+
+    } catch (error) {
+        respuesta.status(400).json({
+            estado: false,
+            mensaje: "Error" + error
+        })
+    }
 }
 
-function consultarHabitacion(peticion=request, respuesta=response) {
+async function consultarHabitacion(peticion=request, respuesta=response) {
 
+    try {
     //resibir el id a buscar
     let id = peticion.params.id;
 
-    respuesta.json({
+    let havitacion = await leerHabitacion(id)
+
+    respuesta.status(200).json({
+        estado: true,
         mensaje:"buscado..." + id
     })
+
+} catch (error){
+    respuesta.status(400).json({
+        estado: false,
+        mensaje:"Error" + error
+    })
+
+}
 }
 
-function editarHabitacion(peticion=request, respuesta=response) {
+async function editarHabitacion(peticion=request, respuesta=response) {
 
-    let id = peticion.params.id;
+    try {
 
-    respuesta.json({
-        mensaje:"editando..." +id
-    })
+        let id = peticion.params.id
+        let datosPeticion = peticion.body
+
+        await modificarHabitacion(id, datosPeticion)
+
+        respuesta.status(200).json({
+            estado: true,
+            mensaje: "Exito editando la havitacion"
+        })
+
+
+    } catch (error) {
+        respuesta.status(400).json({
+            estado: false,
+            mensaje: "Upss... tenemos un problema: " + error
+        })
+    }
 }
-function eliminarHabitacion(peticion=request, respuesta=response) {
+
+
+
+async function eliminarHabitacion(peticion=request, respuesta=response) {
     
-    let id = peticion.params.id;
-    
-    respuesta.json({
-        mensaje:"eliminando..."
-    })
+    try {
+
+        let id = peticion.params.id
+
+        await borrarHabitacion(id)
+
+        respuesta.status(200).json({
+            estado: true,
+            mensaje: "Exito al borrar la havitacion"
+        })
+
+
+    } catch (error) {
+        respuesta.status(400).json({
+            estado: false,
+            mensaje: "Upss... tenemos un problema: " + error
+        })
+    } 
 }
 
 module.exports={
