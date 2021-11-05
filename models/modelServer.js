@@ -32,6 +32,7 @@ despertarBD(){
 }
 
 llamarAuxiliares(){
+    
     this.app.use(express.json())
     this.app.use(cors())
 }

@@ -13,17 +13,17 @@ const ReservaModelo = Schema({
     },
 
     descripcion:{
-        type: Date,
+        type: String,
         require: true
     },
 
     precioAdultoPorNoche:{
-        type: Date,
+        type: Number,
         require: true
     },
 
     PrecioNinoPorNoche:{
-        type: String,
+        type: Number,
         require: true
     }
 
